@@ -1,56 +1,42 @@
 window.addEventListener('load', (event) => {
-    let startButton = document.getElementById('start');
-    let stopButton = document.getElementById('stop');
-    let BPM = document.getElementById('BPM')
-    let label = document.getElementById('label');
-    BPM.addEventListener('input', function() {
-        label.textContent = `BPM: ${BPM.value}`
-    })
+    let startButton = document.getElementsByClassName('start-button')[0];
+    let stopButton = document.getElementsByClassName('stop-button')[0];
+    let BPM = document.getElementsByClassName('BPM')[0]
+    let label = document.getElementsByTagName('label')[0];
+    let tick = new Audio('./metronome.wav');
+    let interval;
 
-    stopButton.disabled = true;
-    stopButton.style.display = 'none';
-
+    //attach event listeners to the buttons
     startButton.addEventListener('click', startMetronome);
     stopButton.addEventListener('click', stopMetronome);
-    
-    let interval
 
     function startMetronome () {
-        startButton.disabled = true
-        startButton.style.display = 'none';
-        stopButton.style.display = 'inline';
-        stopButton.disabled = false
-        // calculate BPM in miliseconds
-        let BPM_ms = 1000 / (Number(BPM.value) / 60);
-        let tick = new Audio('./metronome.wav');
-        // set metronome animation
-        BPM.style.animation = `metronome ${(BPM_ms / 500)}s linear`;
-        // stops the animation after completing the beats
-        BPM.style.animationIterationCount = BPM.value / 2;
-        let ticks = 0
-        // play the thick sound every N miliseconds
-        interval = setInterval(function() {
-            tick.play()
-            ticks++
-            console.log(ticks)
-        }, BPM_ms);
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        BPM.disabled = true;
+        let BPM_ms = 60000 / Number(BPM.value);
 
-        // clear the sound interval so the sound stops with the animation after 1 minute
-        setTimeout(function() {
-           initialState()
-        }, 60000)
-    }
+        BPM.classList.add('animation');
+        BPM.style.setProperty('--miliseconds', `${(BPM_ms / 500)}s`);
+
+        tick.play();
+        interval = setInterval(function () {
+            tick.currentTime = 0;
+            tick.play();
+        }, BPM_ms);
+    };
 
     function stopMetronome () {
-        initialState()
+        clearInterval(interval);
+        BPM.classList.remove('animation');
+        BPM.style.setProperty('--miliseconds', `0s`);
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        BPM.disabled = false;
     }
 
-    function initialState () {
-        clearInterval(interval)
-        BPM.style.animation = '';
-        startButton.disabled = false;
-        startButton.style.display = 'inline';
-        stopButton.disabled = true;
-        stopButton.style.display = 'none'
-    }
-})
+     // Update label with the input value
+     BPM.addEventListener('input', function() {
+        label.textContent = `${BPM.value} BPM`
+    });
+});

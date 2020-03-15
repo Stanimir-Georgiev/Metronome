@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metronome</title>
+    <link rel="stylesheet" href="./metronome.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <section class="metronome-wrapper">
+            <div class="metronome">
+                <img src="./metronome-svgrepo-com.svg" alt="metronome">
+                <label for="thumb">120 BPM</label>
+                <input type="range" name="bpm" min="40" max="200" step="1" class="BPM">
+                <button class="start-button">Start!</button>
+                <button class="stop-button" disabled>Stop!</button>
+            </div>
+        </section>
+    </div>
+    <script src="./metronome.js"></script>
+</body>
+</html>
